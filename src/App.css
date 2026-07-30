@@ -1,0 +1,13 @@
+.menu-item {
+  padding: 18px 25px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 17px;
+  transition: 0.3s;
+}
+
+.menu-item:hover {
+  background: #1565C0;
+}
