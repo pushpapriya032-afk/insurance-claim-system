@@ -45,7 +45,25 @@ exports.register = async (req, res) => {
     }
 };
 
-// Login User
+// Get policy number for logged-in customer
+exports.getPolicy = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    // Look for existing claims to extract policy number
+    const [rows] = await pool.query(
+      "SELECT policy_number FROM claims WHERE claimant_id = ? ORDER BY id ASC LIMIT 1",
+      [userId]
+    );
+    if (rows.length > 0 && rows[0].policy_number) {
+      return res.json({ success: true, policyNumber: rows[0].policy_number });
+    }
+    // Generate deterministic policy from user id
+    const policyNumber = `POL-${String(userId).padStart(6, "0")}`;
+    res.json({ success: true, policyNumber });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
